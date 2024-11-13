@@ -1,23 +1,16 @@
 <template>
-  <div class="pokemon" style="width: 200px">
-    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+  <div class="pokemon" style="width: 400px">
+    <div
+      class="max-w-sm rounded overflow-hidden shadow-lg bg-white items-center justify-center justify-items-center"
+    >
       <div class="flex justify-items-end items-center space-x-4">
         <!-- Imagem -->
-        <ArrowLeftIcon
-          class="px-2 py-4 bg-white text-black-200 rounded hover:bg-gray-100 hover:cursor-pointer w-10 h-full"
-          :class="{ hidden: isClassVisible }"
-          @click="changeSprite"
-        />
         <img
           :src="currentImg"
-          alt="Descrição da imagem"
-          class="rounded-full w-full"
-        />
-
-        <ArrowRightIcon
-          class="px-2 py-4 bg-white text-black-200 rounded hover:bg-gray-100 hover:cursor-pointer w-10 h-11"
           @click="changeSprite"
-          :class="{ hidden: !isClassVisible }"
+          alt="Descrição da imagem"
+          class="rounded-full w-full hover:cursor-pointer"
+          style="height: 150px; width: 150px"
         />
       </div>
 
@@ -26,7 +19,8 @@
       </div>
       <div class="px-6 pt-4 pb-2">
         <span
-          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+          class="inline-block rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2"
+          :class="isColor"
           >Tipo: {{ pokemon.type }}
         </span>
       </div>
@@ -35,7 +29,6 @@
 </template>
 
 <script>
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/vue/24/solid";
 import axios from "axios";
 export default {
   props: {
@@ -54,8 +47,7 @@ export default {
   },
   data() {
     return {
-      isFront: true,
-      isClassVisible: true,
+      isColor: "",
       currentImg: "",
       pokemon: {
         type: "",
@@ -71,7 +63,7 @@ export default {
     },
     translateType(type) {
       if (type.toLowerCase() === "grass") {
-        return "grama";
+        return "planta";
       } else if (type.toLowerCase() === "fire") {
         return "fogo";
       } else if (type.toLowerCase() === "water") {
@@ -87,17 +79,17 @@ export default {
       } else if (type.toLowerCase() === "flying") {
         return "voador";
       } else if (type.toLowerCase() === "poison") {
-        return "veneno";
+        return "venenoso";
       } else if (type.toLowerCase() === "fairy") {
         return "fada";
       } else if (type.toLowerCase() === "fighting") {
-        return "luta";
+        return "lutador";
       } else if (type.toLowerCase() === "rock") {
         return "rocha";
       } else if (type.toLowerCase() === "ghost") {
         return "fantasma";
       } else if (type.toLowerCase() === "steel") {
-        return "aço";
+        return "metal";
       } else if (type.toLowerCase() === "ice") {
         return "gelo";
       } else if (type.toLowerCase() === "dragon") {
@@ -113,26 +105,55 @@ export default {
     changeSprite() {
       if (this.isFront) {
         this.isFront = false;
-        this.currentImg = this.pokemon.back;
-        this.isClassVisible = false;
+        return (this.currentImg = this.pokemon.back);
       } else {
         this.isFront = true;
-        this.currentImg = this.pokemon.front;
-        this.isClassVisible = true;
+        return (this.currentImg = this.pokemon.front);
+      }
+    },
+    colorClass(value) {
+      switch (value) {
+        case "planta":
+          return (this.isColor = "bg-green-800");
+        case "inseto":
+          return (this.isColor = "bg-lime-500");
+        case "água":
+          return (this.isColor = "bg-blue-500");
+        case "fogo":
+          return (this.isColor = "bg-orange-600");
+        case "elétrico":
+          return (this.isColor = "bg-yellow-500");
+        case "rocha":
+          return (this.isColor = "bg-yellow-950");
+        case "venenoso":
+          return (this.isColor = "bg-violet-600");
+        case "fada":
+          return (this.isColor = "bg-red-300");
+        case "sombrio":
+          return (this.isColor = "bg-black");
+        case "psíquico":
+          return (this.isColor = "bg-red-500");
+        case "lutador":
+          return (this.isColor = "bg-red-800");
+        case "metal":
+          return (this.isColor = "bg-stone-500");
+        case "terra":
+          return (this.isColor = "bg-amber-700");
+        case "fantasma":
+          return (this.isColor = "bg-violet-900");
+        default:
+          return (this.isColor = "bg-neutral-400");
       }
     },
   },
-  created: function () {
+  created() {
     axios.get(this.url).then((res) => {
       this.pokemon.type = this.translateType(res.data.types[0].type.name);
       this.pokemon.front = res.data.sprites.front_default;
       this.pokemon.back = res.data.sprites.back_default;
       this.currentImg = this.pokemon.front;
+      this.colorClass(this.pokemon.type);
     });
-  },
-  components: {
-    ArrowRightIcon,
-    ArrowLeftIcon,
   },
 };
 </script>
