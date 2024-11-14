@@ -19,6 +19,7 @@
           class="block w-full pl-10 rounded-md border-none py-1.5 text-gray-900 ring-gray-300 placeholder:text-gray-400 sm:text-sm focus:outline-none"
           v-model="searchValue"
           @keyup.enter="triggerSearch"
+          autocomplete="off"
         />
       </div>
     </div>
@@ -37,7 +38,8 @@ export default {
     };
   },
   methods: {
-    triggerSearch() {
+    triggerSearch(event) {
+      event.preventDefault();
       this.$emit("update:search", this.searchValue);
     },
   },

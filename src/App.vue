@@ -2,6 +2,7 @@
   <div class="flex flex-col items-center min-h-screen bg-yellow-200" id="app">
     <NavBar @update:search="searchPokemon" />
     <div class="mt-28"></div>
+    <NotFound v-if="filteredPokemons().length == 0" />
     <div
       v-for="(pokemon, id) in filteredPokemons()"
       :key="pokemon.url"
@@ -16,8 +17,8 @@
 <script>
 import axios from "axios";
 import NavBar from "./components/NavBar.vue";
+import NotFound from "./components/NotFound.vue";
 import PokemonComponent from "./components/PokemonComponent.vue";
-
 export default {
   name: "App",
   data() {
@@ -54,6 +55,7 @@ export default {
   components: {
     PokemonComponent,
     NavBar,
+    NotFound,
   },
 };
 </script>
